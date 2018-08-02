@@ -19,14 +19,17 @@ namespace AuditoriaFront
         }
 
    
-        private void SQLConn(object sender, EventArgs e) //conecta a sql server y ejecuta el comando del text area - deja cerrada la conexion
+        private void Auditar_Button_Pressed(object sender, EventArgs e) //conecta a sql server y ejecuta el comando del text area - deja cerrada la conexion
         {
             ConectarSQL conectar = new ConectarSQL();
-			
-	    
+
+
 			//DialogResult dialogResult = MessageBox.Show("query",sql);
 			//user_text_area_input.Text
-			resultados_text_area.Text = conectar.conectarSQL(user_database_name_input.Text, user_text_area_input.Text);
+			string headers = "";
+
+			resultados_text_area.Text = conectar.auditarbase(user_database_name_input.Text, user_text_area_input.Text);
+			
 			//Console.WriteLine(sql);
        
         }
@@ -41,7 +44,7 @@ namespace AuditoriaFront
         }
         private void crear_archivos_resultados() //imprime el texto del resultados text area en un txt 
         {
-            string file_name = "\\prueba.txt";
+            string file_name = "\\RESULTADOS_AUDITORIA.csv";
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult dialogResult = fbd.ShowDialog();
             if(dialogResult == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
@@ -66,5 +69,16 @@ namespace AuditoriaFront
                
             }
         }
-    }
+
+		private void DBCC_Button_Pressed(object sender, EventArgs e)
+		{
+
+			ConectarSQL conectar = new ConectarSQL();
+			string headers = "Error,Level,State,MessageText,ReapirLevel,Status,DBLD,DBFragID,ObjectID,IndexID,PartitionID,AllocUnitId,RidDBLD,RidPruld,File,Page,Slot,RefDbld,RefPruld,RedFile,RefPage,RefSlot,Allocation\n";
+			string result = conectar.chequeoBase(user_database_name_input.Text, user_text_area_input.Text);
+			resultados_text_area.Text = headers + result;
+
+
+		}
+	}
 }
