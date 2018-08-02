@@ -13,7 +13,7 @@ namespace AuditoriaFront
 
         private string getConnectionString(string bdd_name)
         {
-            string data_source = "DESKTOP-RSO768Q"; // nombre del servidor 
+            string data_source = "DESKTOP-F4SKCA1"; // nombre del servidor 
           
             string atributos = "Integrated Security=True"; //atributos adicionales
 

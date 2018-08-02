@@ -22,7 +22,12 @@ namespace AuditoriaFront
         private void SQLConn(object sender, EventArgs e) //conecta a sql server y ejecuta el comando del text area - deja cerrada la conexion
         {
             ConectarSQL conectar = new ConectarSQL();
-            resultados_text_area.Text = conectar.conectarSQL(user_database_name_input.Text, user_text_area_input.Text);
+			
+	    
+			//DialogResult dialogResult = MessageBox.Show("query",sql);
+			//user_text_area_input.Text
+			resultados_text_area.Text = conectar.conectarSQL(user_database_name_input.Text, user_text_area_input.Text);
+			//Console.WriteLine(sql);
        
         }
 
