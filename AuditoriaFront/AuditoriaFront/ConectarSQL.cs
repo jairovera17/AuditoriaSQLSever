@@ -68,9 +68,10 @@ close ForeignKeys
 deallocate ForeignKeys
 
 select* from ARef_Integrity ";
-	
 
-        private string getConnectionString(string bdd_name)
+
+
+		private string getConnectionString(string bdd_name)
         {
             string data_source = "DESKTOP-F4SKCA1"; // nombre del servidor 
           
@@ -86,6 +87,54 @@ select* from ARef_Integrity ";
 		public string auditarbase (string base_de_datos,string raw_sql)
 		{
 			return ejecutarComando(base_de_datos, auditSQL);
+		}
+
+		public List<string> getIR(String base_de_datos, string raw_sql)
+		{
+			
+			return setParsing(base_de_datos, raw_sql);
+		}
+
+		public int getFK(String base_de_datos,string raw_sql)
+		{
+			string connection = getConnectionString(base_de_datos);
+			SqlConnection conn = new SqlConnection(connection);
+			SqlCommand comando;
+			SqlDataReader sql_data_reader;
+			try
+			{
+				conn.Open();
+				comando = new SqlCommand(raw_sql, conn);
+				sql_data_reader = comando.ExecuteReader();
+				int aux=0;
+				while (sql_data_reader.Read())
+				{
+					for (int x = 0; x < sql_data_reader.FieldCount; x++)
+					{
+						aux += Int32.Parse( sql_data_reader.GetValue(x)+"");
+					}
+		
+				}
+
+				sql_data_reader.Close();
+				comando.Dispose();
+				conn.Close();
+				return aux;
+			}
+			catch (Exception err)
+			{
+
+				MessageBox.Show("No se pudo conectar\n" + err.ToString());
+				return 0;
+			}
+
+		}
+		public List<string> getColName(String base_de_datos,string table_name)
+		{
+			string TN = @"select COLUMN_NAME
+from INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + table_name + "'";
+			return setParsing(base_de_datos,TN);
+
 		}
 
 		public string chequeoBase (string base_de_datos, string raw_sql)
@@ -127,5 +176,80 @@ select* from ARef_Integrity ";
                 return null;
             }
         }
-    }
+		public List<string> setParsing(string base_de_datos, string raw_sql)
+		{
+			string connection = getConnectionString(base_de_datos);
+			SqlConnection conn = new SqlConnection(connection);
+			SqlCommand comando;
+			SqlDataReader sql_data_reader;
+			try
+			{
+				conn.Open();
+				comando = new SqlCommand(raw_sql, conn);
+				sql_data_reader = comando.ExecuteReader();
+				string aux = "";
+				List<string> lista = new List<string>();
+				
+				while (sql_data_reader.Read())
+				{
+					for (int x = 0; x < sql_data_reader.FieldCount; x++)
+					{
+						lista.Add( sql_data_reader.GetValue(x)+"");
+						
+
+					}
+					
+
+				}
+
+				sql_data_reader.Close();
+				comando.Dispose();
+				conn.Close();
+				return lista;
+			}
+			catch (Exception err)
+			{
+
+				MessageBox.Show("No se pudo conectar\n" + err.ToString());
+				return null;
+			}
+		}
+
+		public int getMatch(String base_de_datos,string table_name,string col_name)
+		{
+			string query = @"select count(*)
+							from INFORMATION_SCHEMA.COLUMNS
+							WHERE TABLE_NAME = '"+table_name+"' and COLUMN_NAME = '"+col_name+"'";
+			string connection = getConnectionString(base_de_datos);
+			SqlConnection conn = new SqlConnection(connection);
+			SqlCommand comando;
+			SqlDataReader sql_data_reader;
+			try
+			{
+				conn.Open();
+				comando = new SqlCommand(query, conn);
+				sql_data_reader = comando.ExecuteReader();
+				int aux = 0;
+				while (sql_data_reader.Read())
+				{
+					for (int x = 0; x < sql_data_reader.FieldCount; x++)
+					{
+						aux += Int32.Parse(sql_data_reader.GetValue(x) + "");
+					}
+
+				}
+
+				sql_data_reader.Close();
+				comando.Dispose();
+				conn.Close();
+				return aux;
+			}
+			catch (Exception err)
+			{
+
+				MessageBox.Show("No se pudo conectar\n" + err.ToString());
+				return 0;
+			}
+		}
+	}
 }

@@ -80,5 +80,46 @@ namespace AuditoriaFront
 
 
 		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			ConectarSQL conectar = new ConectarSQL();
+			List<string> lista = new List<string>();
+			List<string> colnames = new List<string>();
+			int count1=0;
+			int count2 = 0;
+			string aux = @"select  name
+						   from sys.tables";
+			string countFK = @"select count(*)
+							from sys.foreign_key_columns";
+			//resultados_text_area.Text = conectar.getIR(user_database_name_input.Text, aux);
+			lista= conectar.getIR(user_database_name_input.Text, aux);
+
+			foreach (string item in lista)
+			{
+				Console.WriteLine(item);
+
+			}
+			count1 = conectar.getFK(user_database_name_input.Text,countFK);
+			Console.WriteLine(count1);
+			for(int i = 1; i<lista.Count;i++)
+			{
+				if (!(lista.ElementAt(i).Equals("sysdiagrams"))&&!(lista.ElementAt(i).Equals("ARef_Integrity")))
+				{
+					colnames = conectar.getColName(user_database_name_input.Text, lista.ElementAt(i));
+					for (int j = i+4;j<colnames.Count;j++)
+					{
+						//Console.WriteLine(var);
+						count2 += conectar.getMatch(user_database_name_input.Text, lista.ElementAt(i), colnames.ElementAt(j));
+
+					}
+					
+				}
+				
+			}
+			Console.WriteLine(count2);
+
+			
+		}
 	}
 }
