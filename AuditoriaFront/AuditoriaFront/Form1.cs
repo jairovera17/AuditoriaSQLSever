@@ -118,8 +118,17 @@ namespace AuditoriaFront
 				
 			}
 			Console.WriteLine(count2);
-
+			if ((count2-count1)!=0)
+			{
+				resultados_text_area.Text = (count2 - count1).ToString();
+			}
+			else
+			{
+				resultados_text_area.Text = "No existen fk faltantes";
+			}
 			
+
+
 		}
 	}
 }
