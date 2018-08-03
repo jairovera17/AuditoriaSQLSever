@@ -107,28 +107,95 @@ namespace AuditoriaFront
 				if (!(lista.ElementAt(i).Equals("sysdiagrams"))&&!(lista.ElementAt(i).Equals("ARef_Integrity")))
 				{
 					colnames = conectar.getColName(user_database_name_input.Text, lista.ElementAt(i));
-					for (int j = i+4;j<colnames.Count;j++)
+					for (int j =i +4;j<colnames.Count;j++)
 					{
 						//Console.WriteLine(var);
 						count2 += conectar.getMatch(user_database_name_input.Text, lista.ElementAt(i), colnames.ElementAt(j));
+					//	MessageBox.Show(lista.ele);
 
 					}
 					
 				}
 				
 			}
+
+			///////////////////////////
+			
+
+			int finalpeque = 0;
+			for (int i = 0; i < lista.Count; i++)
+			{
+				Console.WriteLine("==============================\n");
+				if (!(lista.ElementAt(i).Equals("sysdiagrams")) && !(lista.ElementAt(i).Equals("ARef_Integrity")))
+				{
+					/*colnames = conectar.getColName(user_database_name_input.Text, lista.ElementAt(i));
+					for (int j = 0; j < colnames.Count; j++)
+					{
+						//Console.WriteLine(var);
+						count2 += conectar.getMatch(user_database_name_input.Text, lista.ElementAt(i), colnames.ElementAt(j));
+
+					}*/
+
+					colnames = conectar.getColName(user_database_name_input.Text, lista.ElementAt(i));
+					for (int j = i + 1; j < lista.Count; j++)
+					{
+						string print = lista.ElementAt(i) + " vs " + lista.ElementAt(j);
+						Console.Write(print+"\n");
+						List<string> pequeaux = conectar.getColName(user_database_name_input.Text, lista.ElementAt(j));
+
+						foreach(string colorigin in colnames)
+						{
+							foreach(string coldest in pequeaux)
+							{
+								if (colorigin.Equals(coldest))
+								{
+
+								//	Console.WriteLine("equals === " + colorigin+" vs " + coldest);
+									finalpeque++;
+								}
+							}
+
+						}
+
+					}
+
+
+				}
+			}
 			Console.WriteLine(count2);
 			if ((count2-count1)!=0)
 			{
-				resultados_text_area.Text = (count2 - count1).ToString();
+				resultados_text_area.Text = "FK faltantes "+(count2 - count1).ToString();
 			}
 			else
 			{
 				resultados_text_area.Text = "No existen fk faltantes";
 			}
+
+			//resultados_text_area.Text = "hola" + finalpeque;
 			
 
 
+		}
+
+		private void pk_button_pressed(object sender, EventArgs e)
+		{
+			ConectarSQL conectar = new ConectarSQL();
+
+
+			//DialogResult dialogResult = MessageBox.Show("query",sql);
+			//user_text_area_input.Text
+			string headers = "";
+			string resultado = conectar.get_no_pk_tables(user_database_name_input.Text,"sdfasdf");
+			resultados_text_area.Text = resultado;
+		}
+
+		private void relation_tables_button_pressed(object sender, EventArgs e)
+		{
+			ConectarSQL conectar = new ConectarSQL();
+			string headers = "\n";
+			string resultado = conectar.get_relation_tables(user_database_name_input.Text, "sdfasdf");
+			resultados_text_area.Text = resultado;
 		}
 	}
 }

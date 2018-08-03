@@ -79,6 +79,32 @@ select* from ARef_Integrity ";
 
 
 
+		private string no_pk_tables_sql = @"SELECT SCHEMA_NAME(t.schema_id) AS schema_name  
+    ,t.name AS table_name  
+FROM sys.tables t   
+WHERE object_id NOT IN   
+   (  
+    SELECT parent_object_id   
+    FROM sys.key_constraints   
+    WHERE type_desc = 'PRIMARY_KEY_CONSTRAINT' -- or type = 'PK'  
+    );  ";
+
+		private string relation_tables_sql = @"select *
+							from sys.foreign_keys";
+
+
+
+
+		public string get_no_pk_tables(string base_de_datos,string raw_sql)
+		{
+			return ejecutarComando(base_de_datos, no_pk_tables_sql);
+		}
+
+		public string get_relation_tables(string base_de_datos,string raw_sql)
+		{
+			return ejecutarComando(base_de_datos, relation_tables_sql);
+			MessageBox.Show(relation_tables_sql);
+		} 
 		private string getConnectionString(string bdd_name)
         {
             string data_source = "DESKTOP-F4SKCA1"; // nombre del servidor 
@@ -137,6 +163,10 @@ select* from ARef_Integrity ";
 			}
 
 		}
+
+
+
+
 		public List<string> getColName(String base_de_datos,string table_name)
 		{
 			string TN = @"select COLUMN_NAME
