@@ -11,6 +11,14 @@ namespace AuditoriaFront
     class ConectarSQL
     {
 		private string auditSQL = @"
+if not exists (select * from sysobjects where name='ARef_Integrity' and xtype='U')CREATE TABLE  ARef_Integrity (
+    id int IDENTITY(1,1) PRIMARY KEY,
+	TableName		varchar(50)	NOT NULL,
+    ForeignKeyName	varchar(50)	NOT NULL,
+	FK_Value	varchar(50)	NOT NULL,
+    TableNameReference		varchar(50)	NOT NULL,
+    Details		varchar(50)	NOT NULL
+) 
 --SCRIPTTTTTTTTTTTTTTTTTTTTTTTTT
 
 Declare @ForeignKeyName nvarchar(128),
